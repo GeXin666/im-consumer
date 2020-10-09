@@ -47,6 +47,15 @@ public final class JedisUtil {
         }
     }
 
+    public static String getString(String key) {
+        try(Jedis jedis = pool.getResource()) {
+            return jedis.get(key);
+        } catch (Exception e) {
+            log.error("redis error", e);
+        }
+        return null;
+    }
+
     public static void delString(String key) {
         try(Jedis jedis = pool.getResource()) {
             jedis.del(key);
@@ -55,11 +64,4 @@ public final class JedisUtil {
         }
     }
 
-    public static void subscribe(BinaryJedisPubSub jedisPubSub, String channel) {
-        try(Jedis jedis = pool.getResource()) {
-            jedis.subscribe(jedisPubSub, channel.getBytes());
-        } catch (Exception e) {
-            log.error("redis error", e);
-        }
-    }
 }
